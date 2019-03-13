@@ -1,19 +1,30 @@
+window.onload = function() {
+  onReady();
+};
+
+
 function onReady() {
-  let toDos = [];
+  let toDos = JSON.parse(localStorage.getItem('toDos'));
+  console.log(toDos);
   const addToDoForm = document.getElementById('addToDoForm');
-  let id = 0;
+
+for(let i = 0; i < toDos.length; i++) {
+  toDos[i].id = i;
+}
 
   function createNewToDo() {
     const newToDoText = document.getElementById('newToDoText');
       if (!newToDoText.value) { return; }
+
     toDos.push({
       title: newToDoText.value,
       complete: false,
-      id:id
+      id:toDos.length
     });
     newToDoText.value = '';
      renderTheUI();
-     id+=1;
+
+     localStorage.setItem('toDos',JSON.stringify(toDos));
   }
 
   function renderTheUI() {
@@ -33,13 +44,24 @@ function onReady() {
       newLi.appendChild(checkbox);
       newLi.appendChild(btn);
 
+    checkbox.addEventListener('change', event => {
+if(toDo.complete == false) {
+toDo.complete = true;
+} else {
+  toDo.complete =false;
+}
+console.log(toDo);
+
+});
+
       btn.addEventListener('click',event => {
         event.preventDefault();
 
         toDos = toDos.filter(item => item.id !== toDo.id);
           renderTheUI();
-
+          localStorage.setItem('toDos',JSON.stringify(toDos));
     });
+
     });
 
   }
@@ -47,12 +69,8 @@ function onReady() {
   addToDoForm.addEventListener('submit', event => {
     event.preventDefault();
     createNewToDo();
+
   })
 
   renderTheUI();
-};
-
-window.onload = function() {
-
-  onReady();
 };
